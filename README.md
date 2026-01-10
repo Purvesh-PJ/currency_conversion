@@ -1,83 +1,106 @@
-# Currency Conversion
+# 💱 CurrencyX
 
-A React-based currency converter that fetches live exchange rates from
-ExchangeRate-API and lets you convert between many supported currencies.
+A modern, real-time currency converter built with React. Convert between 30+ currencies instantly with live exchange rates.
 
-## Features
+![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=white)
+![Styled Components](https://img.shields.io/badge/Styled_Components-6.1-DB7093?logo=styled-components&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-- Real-time exchange rates via a public API.
-- Wide currency list with quick dropdown selection.
-- Simple single-page UI with client-side routing.
+## 📸 Preview
 
-## Tech Stack
+![CurrencyX Preview](./client/public/screenshots/Screenshot%202026-01-10%20171644.png)
 
-- Frontend: React 18, React Router, Styled Components
-- Data fetching: Axios
-- Tooling: Create React App
-- Backend: Node.js/Express dependencies are scaffolded in `server/` (no server
-  runtime code in this repo)
+## ✨ Features
 
-## Project Structure
+- 🔄 Real-time exchange rates via ExchangeRate-API
+- 🌍 Support for 30+ world currencies
+- 🔀 Quick swap between source and target currencies
+- 📱 Fully responsive design (mobile & desktop)
+- 🎨 Modern glassmorphism UI with gradient accents
 
-- `client/` React frontend
-- `server/` Backend dependencies (placeholder for future API server)
+## 🛠️ Tech Stack
 
-## Prerequisites
+| Category | Technology |
+|----------|------------|
+| Framework | React 18 |
+| Routing | React Router v7 |
+| Styling | Styled Components |
+| HTTP Client | Axios |
+| Build Tool | Create React App |
 
-- Node.js (LTS recommended; includes npm)
-- An ExchangeRate-API key from https://www.exchangerate-api.com/
+## 🚀 Quick Start
 
-## Installation
+### Prerequisites
 
-1. Clone the repository.
-   ```bash
-   git clone https://github.com/Purvesh-PJ/currency_conversion.git
-   cd currency_conversion
-   ```
-2. Install client dependencies.
-   ```bash
-   cd client
-   npm install
-   ```
-3. (Optional) Install server dependencies.
-   ```bash
-   cd ../server
-   npm install
-   ```
+- Node.js 16+ (LTS recommended)
+- npm or yarn
+- [ExchangeRate-API](https://www.exchangerate-api.com/) key (free tier available)
 
-## Configuration
-
-Update the API key used by the client:
-
-- Open `client/src/services/currencyService.js`
-- Replace the `BASE_URL` value with your key:
-  `https://v6.exchangerate-api.com/v6/<YOUR_API_KEY>`
-
-## Run Locally
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/Purvesh-PJ/currency_conversion.git
+cd currency_conversion
+
+# Install dependencies
 cd client
+npm install
+
+# Start development server
 npm start
 ```
 
-The app runs at `http://localhost:3000`.
+App runs at `http://localhost:3000`
 
-## Build
+### Configuration
 
-```bash
-cd client
-npm run build
+Add your API key in `client/src/services/currencyService.js`:
+
+```javascript
+const BASE_URL = 'https://v6.exchangerate-api.com/v6/YOUR_API_KEY';
 ```
 
-## Tests
+## 📁 Project Structure
 
-```bash
-cd client
-npm test
+```
+currency_conversion/
+├── client/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── CurrencyConverter.js
+│   │   ├── pages/
+│   │   │   ├── HomePage.js
+│   │   │   └── 404NotFound.js
+│   │   ├── services/
+│   │   │   └── currencyService.js
+│   │   ├── AppRoutes.js
+│   │   └── index.js
+│   └── package.json
+└── README.md
 ```
 
-## Notes
+## 📜 Available Scripts
 
-- The frontend currently calls ExchangeRate-API directly; no backend server is
-  required to run the app.
-- The default Create React App README is in `client/README.md`.
+| Command | Description |
+|---------|-------------|
+| `npm start` | Run development server |
+| `npm run build` | Create production build |
+| `npm test` | Run test suite |
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+Made with ❤️ by [Purvesh-PJ](https://github.com/Purvesh-PJ)
