@@ -1,29 +1,35 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
-import { getExchangeRate } from '../services/currencyService'; // Import the service
+import { getExchangeRate } from '../services/currencyService';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 `;
 
 const Card = styled.div`
-  background: #fff;
-  padding: 3rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1.25rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
   width: 100%;
-  max-width: 400px;
+  max-width: 320px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
-const Heading = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: #4caf50;
+const Heading = styled.h2`
+  font-size: 1.2rem;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-align: center;
+  font-weight: 700;
 `;
 
 const Form = styled.form`
@@ -34,152 +40,153 @@ const Form = styled.form`
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+`;
+
+const Label = styled.label`
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 0.2rem;
+  font-weight: 500;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Input = styled.input`
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
   width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  
+  &:focus {
+    outline: none;
+    border-color: #764ba2;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+  }
+  
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
 const Select = styled.select`
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
   width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  
+  &:focus {
+    outline: none;
+    border-color: #764ba2;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+  }
+`;
+
+const SwapIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0.25rem 0;
+  color: #764ba2;
+  font-size: 1rem;
 `;
 
 const Button = styled.button`
-  padding: 12px;
-  font-size: 1rem;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: white;
-  background-color: #4caf50;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-
+  transition: all 0.3s ease;
+  
   &:hover {
-    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(118, 75, 162, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 const Result = styled.div`
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: #f4f4f4;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
   text-align: center;
-  font-size: 1.5rem;
-  color: #333;
+  color: white;
+`;
+
+const ResultLabel = styled.div`
+  font-size: 0.7rem;
+  opacity: 0.9;
+  margin-bottom: 0.3rem;
+`;
+
+const ResultValue = styled.div`
+  font-size: 1.1rem;
+  font-weight: 700;
 `;
 
 const supportedCurrencies = [
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'EUR', name: 'Euro' },
-    { code: 'GBP', name: 'British Pound' },
-    { code: 'INR', name: 'Indian Rupee' },
-    { code: 'AUD', name: 'Australian Dollar' },
-    { code: 'CAD', name: 'Canadian Dollar' },
-    { code: 'JPY', name: 'Japanese Yen' },
-    { code: 'CNY', name: 'Chinese Yuan' },
-    { code: 'CHF', name: 'Swiss Franc' },
-    { code: 'MXN', name: 'Mexican Peso' },
-    { code: 'ZAR', name: 'South African Rand' },
-    { code: 'BRL', name: 'Brazilian Real' },
-    { code: 'SGD', name: 'Singapore Dollar' },
-    { code: 'MYR', name: 'Malaysian Ringgit' },
-    { code: 'PHP', name: 'Philippine Peso' },
-    { code: 'THB', name: 'Thai Baht' },
-    { code: 'TRY', name: 'Turkish Lira' },
-    { code: 'HKD', name: 'Hong Kong Dollar' },
-    { code: 'NOK', name: 'Norwegian Krone' },
-    { code: 'SEK', name: 'Swedish Krona' },
-    { code: 'DKK', name: 'Danish Krone' },
-    { code: 'NPR', name: 'Nepalese Rupee' },
-    { code: 'KRW', name: 'South Korean Won' },
-    { code: 'RUB', name: 'Russian Ruble' },
-    { code: 'AED', name: 'United Arab Emirates Dirham' },
-    { code: 'SAR', name: 'Saudi Riyal' },
-    { code: 'KWD', name: 'Kuwaiti Dinar' },
-    { code: 'OMR', name: 'Omani Rial' },
-    { code: 'EGP', name: 'Egyptian Pound' },
-    { code: 'BHD', name: 'Bahraini Dinar' },
-    { code: 'KES', name: 'Kenyan Shilling' },
-    { code: 'TWD', name: 'New Taiwan Dollar' },
-    { code: 'VND', name: 'Vietnamese Dong' },
-    { code: 'PKR', name: 'Pakistani Rupee' },
-    { code: 'JOD', name: 'Jordanian Dinar' },
-    { code: 'QAR', name: 'Qatari Rial' },
-    { code: 'CLP', name: 'Chilean Peso' },
-    { code: 'COP', name: 'Colombian Peso' },
-    { code: 'PEN', name: 'Peruvian Nuevo Sol' },
-    { code: 'ARS', name: 'Argentine Peso' },
-    { code: 'UYU', name: 'Uruguayan Peso' },
-    { code: 'AED', name: 'United Arab Emirates Dirham' },
-    { code: 'HUF', name: 'Hungarian Forint' },
-    { code: 'PLN', name: 'Polish Zloty' },
-    { code: 'CZK', name: 'Czech Koruna' },
-    { code: 'ISK', name: 'Icelandic Króna' },
-    { code: 'RON', name: 'Romanian Leu' },
-    { code: 'BGN', name: 'Bulgarian Lev' },
-    { code: 'HRK', name: 'Croatian Kuna' },
-    { code: 'LKR', name: 'Sri Lankan Rupee' },
-    { code: 'BDT', name: 'Bangladeshi Taka' },
-    { code: 'BMD', name: 'Bermudian Dollar' },
-    { code: 'MDL', name: 'Moldovan Leu' },
-    { code: 'LTL', name: 'Lithuanian Litas' },
-    { code: 'LVL', name: 'Latvian Lats' },
-    { code: 'AZN', name: 'Azerbaijani Manat' },
-    { code: 'AMD', name: 'Armenian Dram' },
-    { code: 'GEL', name: 'Georgian Lari' },
-    { code: 'AFN', name: 'Afghan Afghani' },
-    { code: 'SYP', name: 'Syrian Pound' },
-    { code: 'SDG', name: 'Sudanese Pound' },
-    { code: 'NPR', name: 'Nepalese Rupee' },
-    { code: 'MWK', name: 'Malawian Kwacha' },
-    { code: 'UGX', name: 'Ugandan Shilling' },
-    { code: 'ZMW', name: 'Zambian Kwacha' },
-    { code: 'TZS', name: 'Tanzanian Shilling' },
-    { code: 'ETB', name: 'Ethiopian Birr' },
-    { code: 'KZT', name: 'Kazakhstani Tenge' },
-    { code: 'MDL', name: 'Moldovan Leu' },
-    { code: 'TJS', name: 'Tajikistani Somoni' },
-    { code: 'KGS', name: 'Kyrgyzstani Som' },
-    { code: 'UZS', name: 'Uzbekistani Som' },
-    { code: 'MNT', name: 'Mongolian Tugrik' },
-    { code: 'LAK', name: 'Laotian Kip' },
-    { code: 'MMK', name: 'Myanmar Kyat' },
-    { code: 'NIO', name: 'Nicaraguan Córdoba' },
-    { code: 'CUP', name: 'Cuban Peso' },
-    { code: 'HNL', name: 'Honduran Lempira' },
-    { code: 'CRC', name: 'Costa Rican Colón' },
-    { code: 'PYG', name: 'Paraguayan Guarani' },
-    { code: 'VEF', name: 'Venezuelan Bolívar' },
-    { code: 'GHS', name: 'Ghanaian Cedi' },
-    { code: 'XOF', name: 'West African CFA Franc' },
-    { code: 'MRU', name: 'Mauritanian Ouguiya' },
-    { code: 'DJF', name: 'Djiboutian Franc' },
-    { code: 'TND', name: 'Tunisian Dinar' },
-    { code: 'MAD', name: 'Moroccan Dirham' },
-    { code: 'SLL', name: 'Sierra Leonean Leone' },
-    { code: 'AFN', name: 'Afghan Afghani' },
-    { code: 'BTN', name: 'Bhutanese Ngultrum' },
-    { code: 'GEL', name: 'Georgian Lari' },
-    { code: 'KMF', name: 'Comorian Franc' },
-    { code: 'RWF', name: 'Rwandan Franc' },
-    { code: 'XOF', name: 'West African CFA Franc' },
-    { code: 'SHP', name: 'Saint Helena Pound' },
-    { code: 'STN', name: 'São Tomé and Príncipe Dobra' }
+  { code: 'USD', name: 'US Dollar' },
+  { code: 'EUR', name: 'Euro' },
+  { code: 'GBP', name: 'British Pound' },
+  { code: 'INR', name: 'Indian Rupee' },
+  { code: 'AUD', name: 'Australian Dollar' },
+  { code: 'CAD', name: 'Canadian Dollar' },
+  { code: 'JPY', name: 'Japanese Yen' },
+  { code: 'CNY', name: 'Chinese Yuan' },
+  { code: 'CHF', name: 'Swiss Franc' },
+  { code: 'MXN', name: 'Mexican Peso' },
+  { code: 'ZAR', name: 'South African Rand' },
+  { code: 'BRL', name: 'Brazilian Real' },
+  { code: 'SGD', name: 'Singapore Dollar' },
+  { code: 'MYR', name: 'Malaysian Ringgit' },
+  { code: 'PHP', name: 'Philippine Peso' },
+  { code: 'THB', name: 'Thai Baht' },
+  { code: 'TRY', name: 'Turkish Lira' },
+  { code: 'HKD', name: 'Hong Kong Dollar' },
+  { code: 'NOK', name: 'Norwegian Krone' },
+  { code: 'SEK', name: 'Swedish Krona' },
+  { code: 'DKK', name: 'Danish Krone' },
+  { code: 'NPR', name: 'Nepalese Rupee' },
+  { code: 'KRW', name: 'South Korean Won' },
+  { code: 'RUB', name: 'Russian Ruble' },
+  { code: 'AED', name: 'United Arab Emirates Dirham' },
+  { code: 'SAR', name: 'Saudi Riyal' },
+  { code: 'KWD', name: 'Kuwaiti Dinar' },
+  { code: 'OMR', name: 'Omani Rial' },
+  { code: 'EGP', name: 'Egyptian Pound' },
+  { code: 'BHD', name: 'Bahraini Dinar' },
+  { code: 'PKR', name: 'Pakistani Rupee' },
+  { code: 'BDT', name: 'Bangladeshi Taka' },
+  { code: 'LKR', name: 'Sri Lankan Rupee' },
 ];
-  
-  
+
+
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('USD');
@@ -196,39 +203,58 @@ const CurrencyConverter = () => {
     }
   };
 
+  const handleSwap = () => {
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+    setConvertedAmount(null);
+  };
+
   return (
     <Container>
       <Card>
-        <Heading>Currency Converter</Heading>
-            <Form onSubmit={handleConvert}>
-                <InputGroup>
-                    <Input
-                    type="number"
-                    placeholder="Enter Amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    required
-                    />
-                    <Select value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
-                    {supportedCurrencies.map(currency => (
-                        <option key={currency.code} value={currency.code}>
-                        {currency.code} - {currency.name}
-                        </option>
-                    ))}
-                    </Select>
-                    <Select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
-                    {supportedCurrencies.map(currency => (
-                        <option key={currency.code} value={currency.code}>
-                        {currency.code} - {currency.name}
-                        </option>
-                    ))}
-                    </Select>
-                </InputGroup>
-            <Button type="submit">Convert</Button>
+        <Heading>💱 Convert Currency</Heading>
+        <Form onSubmit={handleConvert}>
+          <InputGroup>
+            <InputWrapper>
+              <Label>Amount</Label>
+              <Input
+                type="number"
+                placeholder="Enter amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <Label>From</Label>
+              <Select value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
+                {supportedCurrencies.map(currency => (
+                  <option key={currency.code} value={currency.code}>
+                    {currency.code} - {currency.name}
+                  </option>
+                ))}
+              </Select>
+            </InputWrapper>
+            <SwapIcon onClick={handleSwap} style={{ cursor: 'pointer' }}>
+              ⇅
+            </SwapIcon>
+            <InputWrapper>
+              <Label>To</Label>
+              <Select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
+                {supportedCurrencies.map(currency => (
+                  <option key={currency.code} value={currency.code}>
+                    {currency.code} - {currency.name}
+                  </option>
+                ))}
+              </Select>
+            </InputWrapper>
+          </InputGroup>
+          <Button type="submit">Convert</Button>
         </Form>
         {convertedAmount && (
           <Result>
-            {amount} {fromCurrency} = {convertedAmount} {toCurrency}
+            <ResultLabel>Converted Amount</ResultLabel>
+            <ResultValue>{amount} {fromCurrency} = {convertedAmount} {toCurrency}</ResultValue>
           </Result>
         )}
       </Card>
@@ -237,4 +263,3 @@ const CurrencyConverter = () => {
 };
 
 export default CurrencyConverter;
-

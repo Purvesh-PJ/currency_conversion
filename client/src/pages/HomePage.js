@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import CurrencyConverter from '../components/CurrencyConverter';
 
@@ -30,24 +29,7 @@ const Logo = styled.div`
   }
 `;
 
-const NavLinks = styled.nav`
-  display: flex;
-  gap: 1.5rem;
-`;
 
-const NavLink = styled(Link)`
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-  }
-`;
 
 const Main = styled.main`
   flex: 1;
@@ -57,12 +39,24 @@ const Main = styled.main`
   justify-content: center;
   padding: 2rem;
   gap: 2rem;
+  
+  @media (min-width: 992px) {
+    flex-direction: row;
+    gap: 4rem;
+    padding: 2rem 4rem;
+  }
 `;
 
 const HeroSection = styled.div`
   text-align: center;
   max-width: 700px;
   margin-bottom: 1rem;
+  
+  @media (min-width: 992px) {
+    text-align: left;
+    flex: 1;
+    margin-bottom: 0;
+  }
 `;
 
 const Heading = styled.h1`
@@ -86,23 +80,31 @@ const Features = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 1rem;
+  
+  @media (min-width: 992px) {
+    justify-content: flex-start;
+  }
 `;
 
 const FeatureItem = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 1);
   font-size: 0.95rem;
   
   span {
-    font-size: 1.2rem;
+    font-size: 2rem;
   }
 `;
 
 const ConverterWrapper = styled.div`
   width: 100%;
   max-width: 450px;
+  
+  @media (min-width: 992px) {
+    flex-shrink: 0;
+  }
 `;
 
 const Footer = styled.footer`
@@ -120,10 +122,6 @@ const HomePage = () => {
         <Logo>
           <span>💱</span> CurrencyX
         </Logo>
-        <NavLinks>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/about">About</NavLink>
-        </NavLinks>
       </Header>
       
       <Main>
